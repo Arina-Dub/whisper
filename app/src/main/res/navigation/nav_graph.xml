@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/SplashFragment">
+
+    <fragment
+        android:id="@+id/SplashFragment"
+        android:name="com.example.pril.SplashFragment"
+        android:label="Splash"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_SplashFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/SplashFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_SplashFragment_to_ChatsFragment"
+            app:destination="@id/ChatsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/LoginFragment"
+        android:name="com.example.pril.LoginFragment"
+        android:label="@string/login_label"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_LoginFragment_to_RegisterFragment"
+            app:destination="@id/RegisterFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_LoginFragment_to_ChatsFragment"
+            app:destination="@id/ChatsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/RegisterFragment"
+        android:name="com.example.pril.RegisterFragment"
+        android:label="@string/register_label"
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_RegisterFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_RegisterFragment_to_ChatsFragment"
+            app:destination="@id/ChatsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ChatsFragment"
+        android:name="com.example.pril.ChatsFragment"
+        android:label="@string/chats_label"
+        tools:layout="@layout/fragment_chats">
+        <action
+            android:id="@+id/action_ChatsFragment_to_ChatDetailFragment"
+            app:destination="@id/ChatDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_ChatsFragment_to_ContactsFragment"
+            app:destination="@id/ContactsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CallsFragment"
+        android:name="com.example.pril.CallsFragment"
+        android:label="@string/calls_label"
+        tools:layout="@layout/fragment_calls">
+        <action
+            android:id="@+id/action_CallsFragment_to_CallMenuFragment"
+            app:destination="@id/CallMenuFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/SettingsFragment"
+        android:name="com.example.pril.SettingsFragment"
+        android:label="@string/settings_label"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_SettingsFragment_to_EditProfileFragment"
+            app:destination="@id/EditProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_SettingsFragment_to_NotificationSettingsFragment"
+            app:destination="@id/NotificationSettingsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_SettingsFragment_to_PrivacyFragment"
+            app:destination="@id/PrivacyFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_SettingsFragment_to_DataStorageFragment"
+            app:destination="@id/DataStorageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_SettingsFragment_to_LanguageFragment"
+            app:destination="@id/LanguageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_SettingsFragment_to_EnergySavingFragment"
+            app:destination="@id/EnergySavingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_SettingsFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_SettingsFragment_to_SplashFragment"
+            app:destination="@id/SplashFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ChatDetailFragment"
+        android:name="com.example.pril.ChatDetailFragment"
+        android:label="{contactName}"
+        tools:layout="@layout/fragment_chat_detail">
+        <argument
+            android:name="contactName"
+            app:argType="string" />
+        <argument
+            android:name="receiverId"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="chatId"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="isGroup"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_ChatDetailFragment_to_ImageDetailFragment"
+            app:destination="@id/ImageDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_ChatDetailFragment_to_CallMenuFragment"
+            app:destination="@id/CallMenuFragment" />
+        <action
+            android:id="@+id/action_ChatDetailFragment_to_UserProfileFragment"
+            app:destination="@id/UserProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_ChatDetailFragment_to_VideoDetailFragment"
+            app:destination="@id/VideoDetailFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/UserProfileFragment"
+        android:name="com.example.pril.UserProfileFragment"
+        android:label="@string/profile"
+        tools:layout="@layout/fragment_user_profile">
+        <argument
+            android:name="userId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_UserProfileFragment_to_CallMenuFragment"
+            app:destination="@id/CallMenuFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ImageDetailFragment"
+        android:name="com.example.pril.ImageDetailFragment"
+        android:label="@string/photo_label"
+        tools:layout="@layout/fragment_image_detail">
+        <argument
+            android:name="imageUrl"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/VideoDetailFragment"
+        android:name="com.example.pril.VideoDetailFragment"
+        android:label="Видео"
+        tools:layout="@layout/fragment_video_detail">
+        <argument
+            android:name="videoUrl"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/IncomingCallFragment"
+        android:name="com.example.pril.IncomingCallFragment"
+        android:label="@string/incoming_call_label"
+        tools:layout="@layout/fragment_incoming_call">
+        <argument
+            android:name="callId"
+            app:argType="string" />
+        <argument
+            android:name="callerName"
+            app:argType="string" />
+        <argument
+            android:name="senderId"
+            app:argType="string" />
+        <argument
+            android:name="jitsiRoomName"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CallMenuFragment"
+        android:name="com.example.pril.CallMenuFragment"
+        android:label="@string/call_label"
+        tools:layout="@layout/fragment_call_menu">
+        <argument
+            android:name="receiverId"
+            app:argType="string" />
+        <argument
+            android:name="receiverName"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="callId"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="isIncoming"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
+            android:name="jitsiRoomName"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/EditProfileFragment"
+        android:name="com.example.pril.EditProfileFragment"
+        android:label="@string/profile"
+        tools:layout="@layout/fragment_edit_profile">
+        <action
+            android:id="@+id/action_EditProfileFragment_to_ChangePasswordFragment"
+            app:destination="@id/ChangePasswordFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_EditProfileFragment_to_ChangeEmailFragment"
+            app:destination="@id/ChangeEmailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/NotificationSettingsFragment"
+        android:name="com.example.pril.NotificationSettingsFragment"
+        android:label="@string/notifications"
+        tools:layout="@layout/fragment_notification_settings" />
+
+    <fragment
+        android:id="@+id/ContactsFragment"
+        android:name="com.example.pril.ContactsFragment"
+        android:label="@string/contacts_label"
+        tools:layout="@layout/fragment_contacts">
+        <action
+            android:id="@+id/action_ContactsFragment_to_ChatDetailFragment"
+            app:destination="@id/ChatDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_ContactsFragment_to_CallMenuFragment"
+            app:destination="@id/CallMenuFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ChangePasswordFragment"
+        android:name="com.example.pril.ChangePasswordFragment"
+        android:label="@string/password_label"
+        tools:layout="@layout/fragment_change_password" />
+
+    <fragment
+        android:id="@+id/ChangeEmailFragment"
+        android:name="com.example.pril.ChangeEmailFragment"
+        android:label="@string/email_label"
+        tools:layout="@layout/fragment_change_email" />
+
+    <fragment
+        android:id="@+id/PrivacyFragment"
+        android:name="com.example.pril.PrivacyFragment"
+        android:label="@string/privacy"
+        tools:layout="@layout/fragment_privacy" />
+
+    <fragment
+        android:id="@+id/DataStorageFragment"
+        android:name="com.example.pril.DataStorageFragment"
+        android:label="@string/data_storage"
+        tools:layout="@layout/fragment_data_storage" />
+
+    <fragment
+        android:id="@+id/LanguageFragment"
+        android:name="com.example.pril.LanguageFragment"
+        android:label="@string/language"
+        tools:layout="@layout/fragment_language" />
+
+    <fragment
+        android:id="@+id/EnergySavingFragment"
+        android:name="com.example.pril.EnergySavingFragment"
+        android:label="@string/energy_saving"
+        tools:layout="@layout/fragment_energy_saving" />
+
+
+
+</navigation>

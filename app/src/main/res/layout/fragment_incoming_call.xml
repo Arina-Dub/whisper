@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/chats_background_gradient"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Входящий звонок"
+        android:textColor="@color/text_primary"
+        android:textSize="18sp" />
+
+    <Space android:layout_width="match_parent" android:layout_height="40dp" />
+
+    <ImageView
+        android:id="@+id/imageViewIncomingAvatar"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/profile" />
+
+    <Space android:layout_width="match_parent" android:layout_height="24dp" />
+
+    <TextView
+        android:id="@+id/textViewIncomingName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Имя"
+        android:textColor="@color/text_primary"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <Space android:layout_width="match_parent" android:layout_height="80dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/buttonDecline"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/ellipse1"
+            android:src="@drawable/phone1"
+            app:tint="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/buttonAnswer"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:background="@drawable/ellipse2"
+            android:backgroundTint="#4CAF50"
+            android:src="@drawable/phone"
+            app:tint="@android:color/white" />
+
+    </LinearLayout>
+
+</LinearLayout>

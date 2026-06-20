@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">Whisper</string>
+    <string name="settings_title">Settings</string>
+    <string name="profile">Profile</string>
+    <string name="privacy">Privacy</string>
+    <string name="notifications">Notifications and Sounds</string>
+    <string name="data_storage">Data and Storage</string>
+    <string name="language">Language</string>
+    <string name="energy_saving">Energy Saving</string>
+    <string name="logout">Logout</string>
+    <string name="user_nickname">User nickname</string>
+    <string name="subscription_status">Status</string>
+
+    <string name="login_label">Login</string>
+    <string name="register_label">Registration</string>
+    <string name="photo_label">Photo</string>
+    <string name="incoming_call_label">Incoming Call</string>
+    <string name="call_label">Call</string>
+    <string name="contacts_label">Contacts</string>
+    <string name="password_label">Password</string>
+    <string name="edit_label">Edit Profile</string>
+    <string name="online_status">Online</string>
+    <string name="offline_status">offline</string>
+    <string name="show_online_status">Show \'Online\' status</string>
+    <string name="email_label">Email</string>
+    <string name="change_photo">Change Photo</string>
+    <string name="name_hint">Name</string>
+    <string name="change_email">Change Email</string>
+    <string name="change_password">Change Password</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="send_message_hint">Send message</string>
+    <string name="name_placeholder">Nickname</string>
+
+    <string name="calling">Calling...</string>
+    <string name="speaker">Speaker</string>
+    <string name="video">Video</string>
+    <string name="microphone">Microphone</string>
+    <string name="end_call">End Call</string>
+    <string name="change_email_title">Change Email</string>
+    <string name="new_email_hint">New Email</string>
+    <string name="password_confirm_hint">Enter password to confirm</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="no_account">No account? Register</string>
+    <string name="have_account">Already have an account? Login</string>
+
+    <string name="notif_messages">Message Notifications</string>
+    <string name="notif_calls">Call Notifications</string>
+    <string name="vibration">Vibration</string>
+    <string name="login_account_title">Login to account</string>
+    <string name="login_button_text">Login</string>
+    <string name="password_hint">Password</string>
+    <string name="chat_default">Chat</string>
+    <string name="change_password_title">Change Password</string>
+    <string name="old_password_hint">Old Password</string>
+    <string name="new_password_hint">New Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="save_password">Save Password</string>
+    <string name="last_seen_recently">last seen recently</string>
+    <string name="last_seen_just_now">last seen just now</string>
+    <string name="create_account_title">Create Account</string>
+    <string name="creating_account_button">Creating Account</string>
+    <string name="error_chat_not_initialized">Error: Chat not initialized</string>
+    <string name="file_from_chat">File from chat</string>
+    <string name="delete_chat_title">Delete chat</string>
+
+    <!-- Navigation labels -->
+    <string name="chats_label">Chats</string>
+    <string name="calls_label">Calls</string>
+    <string name="settings_label">Settings</string>
+    <string name="lang_russian">Russian</string>
+    <string name="lang_english">English</string>
+    <string name="search_hint">Search...</string>
+</resources>

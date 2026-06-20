@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">Whisper</string>
+    <string name="settings_title">Настройки</string>
+    <string name="profile">Профиль</string>
+    <string name="privacy">Конфиденциальность</string>
+    <string name="notifications">Уведомления и звуки</string>
+    <string name="data_storage">Данные и память</string>
+    <string name="language">Язык</string>
+    <string name="energy_saving">Энергосбережение</string>
+    <string name="logout">Выйти</string>
+    <string name="user_nickname">Ник пользователя</string>
+    <string name="subscription_status">Статус</string>
+
+    <string name="login_label">Вход</string>
+    <string name="register_label">Регистрация</string>
+    <string name="photo_label">Фото</string>
+    <string name="incoming_call_label">Входящий звонок</string>
+    <string name="call_label">Звонок</string>
+    <string name="contacts_label">Контакты</string>
+    <string name="password_label">Пароль</string>
+    <string name="edit_label">Редактирование</string>
+    <string name="online_status">В сети</string>
+    <string name="offline_status">не в сети</string>
+    <string name="show_online_status">Показывать статус \'В сети\'</string>
+    <string name="email_label">Email</string>
+    <string name="change_photo">Изменить фото</string>
+    <string name="name_hint">Имя</string>
+    <string name="change_email">Сменить Email</string>
+    <string name="change_password">Сменить пароль</string>
+    <string name="save_changes">Сохранить изменения</string>
+    <string name="send_message_hint">Отправить сообщение</string>
+    <string name="name_placeholder">Ник</string>
+
+    <string name="calling">Вызов...</string>
+    <string name="speaker">Динамик</string>
+    <string name="video">Видео</string>
+    <string name="microphone">Микрофон</string>
+    <string name="end_call">Завершить</string>
+    <string name="change_email_title">Смена Email</string>
+    <string name="new_email_hint">Новый Email</string>
+    <string name="password_confirm_hint">Введите пароль для подтверждения</string>
+    <string name="login_button">Войти</string>
+    <string name="register_button">Зарегистрироваться</string>
+    <string name="no_account">Нет аккаунта? Регистрация</string>
+    <string name="have_account">Уже есть аккаунт? Войти</string>
+
+    <string name="notif_messages">Уведомления о сообщениях</string>
+    <string name="notif_calls">Уведомления о звонках</string>
+    <string name="vibration">Вибрация</string>
+    <string name="login_account_title">Вход в аккаунт</string>
+    <string name="login_button_text">Зайти</string>
+    <string name="password_hint">Пароль</string>
+    <string name="chat_default">Чат</string>
+    <string name="change_password_title">Смена пароля</string>
+    <string name="old_password_hint">Старый пароль</string>
+    <string name="new_password_hint">Новый пароль</string>
+    <string name="confirm_password_hint">Подтвердите пароль</string>
+    <string name="save_password">Сохранить пароль</string>
+    <string name="last_seen_recently">был(а) недавно</string>
+    <string name="last_seen_just_now">был(а) только что</string>
+    <string name="create_account_title">Создайте аккаунт</string>
+    <string name="creating_account_button">Создаём аккаунт</string>
+    <string name="error_chat_not_initialized">Ошибка: Чат не инициализирован</string>
+    <string name="file_from_chat">Файл из чата</string>
+    <string name="delete_chat_title">Удалить чат</string>
+
+    <!-- Navigation labels -->
+    <string name="chats_label">Чаты</string>
+    <string name="calls_label">Звонки</string>
+    <string name="settings_label">Настройки</string>
+    <string name="lang_russian">Русский</string>
+    <string name="lang_english">English</string>
+    <string name="search_hint">Поиск...</string>
+</resources>
