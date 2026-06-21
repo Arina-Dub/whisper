@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -18,7 +19,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -55,7 +55,8 @@ public class CallMenuFragment extends Fragment {
     private boolean isMuted = false;
     private boolean isVideoOn = false;
     private boolean isSpeakerOn = false;
-    
+    private boolean isTimerStarted = false;
+
     private AudioManager audioManager;
     private ToneGenerator toneGenerator;
     private String receiverId;
@@ -77,17 +78,15 @@ public class CallMenuFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentCallMenuBinding.inflate(inflater, container, false);
-        
-        // Создаем JitsiMeetView программно, используя контекст Activity,
-        // чтобы избежать ошибки "Enclosing Activity must implement JitsiMeetActivityInterface"
+
         if (getActivity() != null) {
             jitsiView = new JitsiMeetView(getActivity());
             binding.jitsiContainer.addView(jitsiView);
         }
-        
+
         db = FirebaseFirestore.getInstance();
         currentUserId = FirebaseAuth.getInstance().getUid();
-        
+
         if (getArguments() != null) {
             receiverId = getArguments().getString("receiverId");
             receiverName = getArguments().getString("receiverName");
@@ -95,7 +94,7 @@ public class CallMenuFragment extends Fragment {
             isIncoming = getArguments().getBoolean("isIncoming", false);
             jitsiRoomName = getArguments().getString("jitsiRoomName");
         }
-        
+
         initJitsi();
         audioManager = (AudioManager) requireContext().getSystemService(Context.AUDIO_SERVICE);
         registerForBroadcasts();
@@ -104,7 +103,7 @@ public class CallMenuFragment extends Fragment {
 
     private void initJitsi() {
         try {
-            URL serverURL = new URL("https://meet.ffmuc.net"); 
+            URL serverURL = new URL("https://meet.ffmuc.net");
             JitsiMeetConferenceOptions defaultOptions = new JitsiMeetConferenceOptions.Builder()
                     .setServerURL(serverURL)
                     .setFeatureFlag("welcomepage.enabled", false)
@@ -112,7 +111,6 @@ public class CallMenuFragment extends Fragment {
                     .setFeatureFlag("toolbox.enabled", false)
                     .setFeatureFlag("notifications.enabled", false)
                     .setFeatureFlag("conference-timer.enabled", false)
-                    // Не ставим setAudioOnly(true), иначе видео не включится позже
                     .build();
             JitsiMeet.setDefaultConferenceOptions(defaultOptions);
         } catch (MalformedURLException e) {
@@ -133,33 +131,49 @@ public class CallMenuFragment extends Fragment {
             BroadcastEvent event = new BroadcastEvent(intent);
             switch (event.getType()) {
                 case CONFERENCE_JOINED:
-                    // Убрали startDialTone отсюда, так как запускаем его сразу при вызове
+                    Log.d("CallMenu", "CONFERENCE_JOINED");
+                    if (isIncoming && !isTimerStarted) {
+                        startCallTimer();
+                    }
                     break;
                 case PARTICIPANT_JOINED:
+                    Log.d("CallMenu", "PARTICIPANT_JOINED");
                     stopDialTone();
                     if (binding != null) {
                         binding.textViewCallStatus.setVisibility(View.GONE);
                     }
-                    if (!isTimerRunning) {
-                        isCallActive = true;
-                        startTimer();
-                        isTimerRunning = true;
+                    if (!isTimerStarted) {
+                        startCallTimer();
                     }
                     if (callId != null && !isIncoming) {
                         db.collection("calls").document(callId).update("status", "ACTIVE");
                     }
                     break;
                 case CONFERENCE_TERMINATED:
+                    Log.d("CallMenu", "CONFERENCE_TERMINATED");
                     endCall();
                     break;
             }
         }
     }
 
+    private void startCallTimer() {
+        if (isTimerStarted) return;
+        isTimerStarted = true;
+        isCallActive = true;
+        isTimerRunning = true;
+
+        if (binding != null) {
+            binding.textViewCallStatus.setVisibility(View.GONE);
+        }
+
+        startTimer();
+        Log.d("CallMenu", "Timer started");
+    }
+
     private void startDialTone() {
         try {
             if (toneGenerator == null) {
-                // Используем STREAM_VOICE_CALL с максимальной громкостью (100)
                 toneGenerator = new ToneGenerator(AudioManager.STREAM_VOICE_CALL, 100);
             }
             toneGenerator.startTone(ToneGenerator.TONE_SUP_RINGTONE);
@@ -174,7 +188,7 @@ public class CallMenuFragment extends Fragment {
             if (toneGenerator == null) {
                 toneGenerator = new ToneGenerator(AudioManager.STREAM_VOICE_CALL, 100);
             }
-            toneGenerator.startTone(ToneGenerator.TONE_PROP_PROMPT, 300); // Короткий сигнал
+            toneGenerator.startTone(ToneGenerator.TONE_PROP_PROMPT, 300);
             new Handler().postDelayed(this::navigateBack, 400);
         } catch (Exception e) {
             navigateBack();
@@ -187,8 +201,7 @@ public class CallMenuFragment extends Fragment {
             if (toneGenerator == null) {
                 toneGenerator = new ToneGenerator(AudioManager.STREAM_VOICE_CALL, 100);
             }
-            toneGenerator.startTone(ToneGenerator.TONE_SUP_BUSY, 1500); // Играем 1.5 секунды
-            // Закрываем через 2 секунды после начала сигнала
+            toneGenerator.startTone(ToneGenerator.TONE_SUP_BUSY, 1500);
             new Handler().postDelayed(this::navigateBack, 2000);
         } catch (Exception e) {
             Log.e("CallMenu", "Error playing busy tone", e);
@@ -211,13 +224,11 @@ public class CallMenuFragment extends Fragment {
         if (receiverName != null) {
             binding.textViewCallerName.setText(receiverName);
         }
-        
-        // Сразу скрываем "Вызов..." для входящего звонка, так как соединение уже есть
+
         if (isIncoming && binding != null) {
             binding.textViewCallStatus.setVisibility(View.GONE);
         }
-        
-        // Загружаем аватарку собеседника
+
         if (receiverId != null) {
             db.collection("users").document(receiverId).get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists() && isAdded() && binding != null) {
@@ -234,9 +245,9 @@ public class CallMenuFragment extends Fragment {
         }
 
         checkInitialPermissions();
-        
+
         binding.buttonEndCall.setOnClickListener(v -> endCall());
-        
+
         binding.buttonMute.setOnClickListener(v -> {
             isMuted = !isMuted;
             Intent intent = new Intent("org.jitsi.meet.SET_AUDIO_MUTED");
@@ -252,17 +263,43 @@ public class CallMenuFragment extends Fragment {
     }
 
     private void toggleSpeaker() {
-        if (audioManager != null) {
-            isSpeakerOn = !isSpeakerOn;
-            audioManager.setSpeakerphoneOn(isSpeakerOn);
-            
-            // Визуальное обновление
-            binding.buttonSpeaker.setAlpha(isSpeakerOn ? 1.0f : 0.6f);
-            binding.buttonSpeaker.setBackgroundResource(isSpeakerOn ? R.drawable.ellipse2_light : R.drawable.ellipse2);
-            
-            if (isSpeakerOn) {
-                audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+        isSpeakerOn = !isSpeakerOn;
+
+        try {
+            // Используем AudioManager для управления динамиком
+            if (audioManager != null) {
+                audioManager.setSpeakerphoneOn(isSpeakerOn);
             }
+
+            // Отправляем команду в Jitsi
+            Intent intent = new Intent("org.jitsi.meet.SET_AUDIO_OUTPUT");
+            intent.putExtra("output", isSpeakerOn ? "speaker" : "earpiece");
+            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent);
+
+            Log.d("CallMenu", "Speaker mode: " + (isSpeakerOn ? "ON" : "OFF"));
+
+        } catch (Exception e) {
+            Log.e("CallMenu", "Error toggling speaker", e);
+            // Fallback
+            if (audioManager != null) {
+                audioManager.setSpeakerphoneOn(isSpeakerOn);
+            }
+        }
+
+        updateSpeakerUI();
+    }
+
+    private void updateSpeakerUI() {
+        if (binding == null) return;
+
+        if (isSpeakerOn) {
+            binding.buttonSpeaker.setAlpha(1.0f);
+            binding.buttonSpeaker.setBackgroundResource(R.drawable.ellipse2_light);
+            binding.buttonSpeaker.setImageResource(R.drawable.volume);
+        } else {
+            binding.buttonSpeaker.setAlpha(0.6f);
+            binding.buttonSpeaker.setBackgroundResource(R.drawable.ellipse2);
+            binding.buttonSpeaker.setImageResource(R.drawable.volume1);
         }
     }
 
@@ -285,13 +322,11 @@ public class CallMenuFragment extends Fragment {
 
     private void performVideoSwitch() {
         isVideoOn = !isVideoOn;
-        
-        // Отправляем команду в Jitsi
+
         Intent intent = new Intent("org.jitsi.meet.SET_VIDEO_MUTED");
         intent.putExtra("muted", !isVideoOn);
         LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent);
-        
-        // Визуальное переключение
+
         if (isVideoOn) {
             binding.layoutOverlay.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         } else {
@@ -301,16 +336,15 @@ public class CallMenuFragment extends Fragment {
         binding.imageViewCallerAvatar.setVisibility(isVideoOn ? View.GONE : View.VISIBLE);
         binding.buttonVideo.setAlpha(isVideoOn ? 1.0f : 0.6f);
         binding.textViewVideo.setText(isVideoOn ? "Выкл.видео" : "Видео");
-        
+
         if (isVideoOn) {
-            binding.textViewVideo.setTextColor(0xFF4CAF50); // Зеленый текст при включении
+            binding.textViewVideo.setTextColor(0xFF4CAF50);
         } else {
             binding.textViewVideo.setTextColor(0xFFFFFFFF);
         }
     }
 
     private void checkInitialPermissions() {
-        // При старте аудио-звонка запрашиваем только микрофон
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             requestAudioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
         } else {
@@ -339,10 +373,10 @@ public class CallMenuFragment extends Fragment {
     private void createNewCall() {
         if (receiverId == null || currentUserId == null) return;
         jitsiRoomName = "PrilCall_" + UUID.randomUUID().toString().substring(0, 8);
-        
+
         binding.textViewCallStatus.setText("Вызов...");
         AppPreferences prefs = new AppPreferences(requireContext());
-        
+
         Map<String, Object> callData = new HashMap<>();
         callData.put("senderId", currentUserId);
         callData.put("senderName", prefs.getUserName());
@@ -377,12 +411,11 @@ public class CallMenuFragment extends Fragment {
     private void joinRoom() {
         if (jitsiRoomName == null) return;
         Log.d("CallLog", "Joining Jitsi room: " + jitsiRoomName);
-        
+
         if (!isIncoming) {
-            // Запускаем гудки с небольшой задержкой, чтобы Jitsi успел инициализировать аудио
             new Handler().postDelayed(this::startDialTone, 1000);
         }
-        
+
         AppPreferences prefs = new AppPreferences(requireContext());
         JitsiMeetUserInfo userInfo = new JitsiMeetUserInfo();
         userInfo.setDisplayName(prefs.getUserName());
@@ -393,7 +426,7 @@ public class CallMenuFragment extends Fragment {
                     .setRoom(jitsiRoomName)
                     .setUserInfo(userInfo)
                     .setAudioMuted(false)
-                    .setVideoMuted(true) // По умолчанию видео ВЫКЛЮЧЕНО
+                    .setVideoMuted(true)
                     .build();
             jitsiView.join(options);
         } catch (MalformedURLException e) {
@@ -407,22 +440,18 @@ public class CallMenuFragment extends Fragment {
             if (value != null && value.exists()) {
                 String status = value.getString("status");
                 Log.d("CallLog", "Call status update: " + status);
-                
+
                 if ("ENDED".equals(status)) {
                     playDisconnectTone();
                 } else if ("REJECTED".equals(status)) {
                     playBusyTone();
                 } else if ("ACTIVE".equals(status)) {
-                    // Если статус ACTIVE, значит собеседник ответил. 
-                    // Скрываем "Вызов...", если Jitsi ивент еще не пришел.
-                    if (binding != null && binding.textViewCallStatus.getVisibility() == View.VISIBLE) {
+                    if (!isTimerStarted) {
+                        startCallTimer();
+                    }
+                    stopDialTone();
+                    if (binding != null) {
                         binding.textViewCallStatus.setVisibility(View.GONE);
-                        if (!isTimerRunning) {
-                            isCallActive = true;
-                            startTimer();
-                            isTimerRunning = true;
-                        }
-                        stopDialTone();
                     }
                 }
             }
@@ -431,7 +460,10 @@ public class CallMenuFragment extends Fragment {
 
     private void endCall() {
         isCallActive = false;
+        isTimerRunning = false;
         stopDialTone();
+        timerHandler.removeCallbacksAndMessages(null);
+
         if (audioManager != null) {
             audioManager.setSpeakerphoneOn(false);
         }
@@ -477,11 +509,12 @@ public class CallMenuFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         stopDialTone();
+        isCallActive = false;
+        isTimerRunning = false;
+        timerHandler.removeCallbacksAndMessages(null);
         if (jitsiView != null) {
             jitsiView.dispose();
         }
-        isCallActive = false;
-        timerHandler.removeCallbacksAndMessages(null);
         stopCallListener();
         try {
             LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver);

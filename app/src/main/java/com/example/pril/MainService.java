@@ -66,7 +66,7 @@ public class MainService extends Service {
         Notification notification = new NotificationCompat.Builder(this, STATUS_CHANNEL_ID)
                 .setContentTitle("Whisper")
                 .setContentText("Поиск новых сообщений...")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.icon)
                 .setPriority(NotificationCompat.PRIORITY_MIN)
                 .setOngoing(true)
                 .build();

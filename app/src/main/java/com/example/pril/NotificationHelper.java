@@ -24,7 +24,7 @@ public class NotificationHelper {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher) // Замените на вашу иконку
+                .setSmallIcon(R.mipmap.icon) // Замените на вашу иконку
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)

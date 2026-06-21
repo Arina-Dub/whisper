@@ -1,5 +1,6 @@
 package com.example.pril;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -8,11 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.pril.databinding.ItemMessageReceivedBinding;
 import com.example.pril.databinding.ItemMessageSentBinding;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +28,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private MediaPlayer mediaPlayer;
     private int playingPosition = -1;
+    private Context context;
 
     public interface OnImageClickListener {
         void onImageClick(String imageUrl);
@@ -73,6 +78,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
         if (viewType == VIEW_TYPE_SENT) {
             ItemMessageSentBinding binding = ItemMessageSentBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
             return new SentViewHolder(binding);
@@ -90,31 +96,53 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (holder instanceof SentViewHolder) {
             SentViewHolder h = (SentViewHolder) holder;
             resetUI(h.binding.layoutMediaSent, h.binding.layoutAudioSent, h.binding.textViewMessageSent, h.binding.imageViewPlayIconSent);
-            
+
             if ("image".equals(message.getType())) {
                 h.binding.layoutMediaSent.setVisibility(View.VISIBLE);
                 h.binding.textViewMessageSent.setVisibility(message.getText().isEmpty() ? View.GONE : View.VISIBLE);
-                Glide.with(h.itemView.getContext()).load(message.getImageUrl()).into(h.binding.imageViewMessageSent);
+                h.binding.imageViewPlayIconSent.setVisibility(View.GONE);
+                Glide.with(h.itemView.getContext())
+                        .load(message.getImageUrl())
+                        .placeholder(R.drawable.profile)
+                        .error(R.drawable.profile)
+                        .into(h.binding.imageViewMessageSent);
                 h.binding.imageViewMessageSent.setOnClickListener(v -> {
-                    if (onImageClickListener != null) onImageClickListener.onImageClick(message.getImageUrl());
+                    if (onImageClickListener != null) {
+                        onImageClickListener.onImageClick(message.getImageUrl());
+                    }
                 });
             } else if ("video".equals(message.getType())) {
                 h.binding.layoutMediaSent.setVisibility(View.VISIBLE);
                 h.binding.imageViewPlayIconSent.setVisibility(View.VISIBLE);
                 h.binding.textViewMessageSent.setVisibility(View.GONE);
-                Glide.with(h.itemView.getContext()).load(message.getImageUrl()).into(h.binding.imageViewMessageSent);
-                h.binding.layoutMediaSent.setOnClickListener(v -> {
-                    if (onVideoClickListener != null) onVideoClickListener.onVideoClick(message.getImageUrl());
-                });
+                // Загружаем превью видео
+                Glide.with(h.itemView.getContext())
+                        .load(message.getImageUrl())
+                        .placeholder(R.drawable.profile)
+                        .error(R.drawable.profile)
+                        .into(h.binding.imageViewMessageSent);
+                // Клик по иконке Play или по всему контейнеру
+                View.OnClickListener videoClickListener = v -> {
+                    String videoUrl = message.getImageUrl();
+                    if (onVideoClickListener != null) {
+                        onVideoClickListener.onVideoClick(videoUrl);
+                    } else {
+                        openVideo(videoUrl);
+                    }
+                };
+                h.binding.layoutMediaSent.setOnClickListener(videoClickListener);
+                h.binding.imageViewPlayIconSent.setOnClickListener(videoClickListener);
+                h.binding.imageViewMessageSent.setOnClickListener(null);
             } else if ("audio".equals(message.getType())) {
                 h.binding.layoutAudioSent.setVisibility(View.VISIBLE);
                 h.binding.textViewMessageSent.setVisibility(View.GONE);
-                
+
                 boolean isPlaying = playingPosition == position;
                 h.binding.buttonPlayAudioSent.setImageResource(isPlaying ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
                 h.binding.buttonPlayAudioSent.setOnClickListener(v -> toggleAudio(h.itemView.getContext(), message.getImageUrl(), position));
             } else {
                 h.binding.textViewMessageSent.setVisibility(View.VISIBLE);
+                h.binding.textViewMessageSent.setText(message.getText());
             }
             h.binding.textViewMessageSent.setText(message.getText());
             h.binding.textViewTimeSent.setText(time);
@@ -122,10 +150,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             // Устанавливаем статус прочтения
             if (message.isRead()) {
                 h.binding.imageViewStatusSent.setImageResource(R.drawable.ic_double_check);
-                h.binding.imageViewStatusSent.setColorFilter(0xFF00E676); // Зеленый для прочитанных
+                h.binding.imageViewStatusSent.setColorFilter(0xFF00E676);
             } else {
                 h.binding.imageViewStatusSent.setImageResource(R.drawable.ic_check);
-                h.binding.imageViewStatusSent.setColorFilter(null); // Розовый по умолчанию из XML
+                h.binding.imageViewStatusSent.setColorFilter(null);
             }
 
             h.itemView.setOnLongClickListener(v -> {
@@ -134,7 +162,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
                 return true;
             });
-            
+
         } else if (holder instanceof ReceivedViewHolder) {
             ReceivedViewHolder h = (ReceivedViewHolder) holder;
             resetUI(h.binding.layoutMediaReceived, h.binding.layoutAudioReceived, h.binding.textViewMessageReceived, h.binding.imageViewPlayIconReceived);
@@ -142,27 +170,49 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if ("image".equals(message.getType())) {
                 h.binding.layoutMediaReceived.setVisibility(View.VISIBLE);
                 h.binding.textViewMessageReceived.setVisibility(message.getText().isEmpty() ? View.GONE : View.VISIBLE);
-                Glide.with(h.itemView.getContext()).load(message.getImageUrl()).into(h.binding.imageViewMessageReceived);
+                h.binding.imageViewPlayIconReceived.setVisibility(View.GONE);
+                Glide.with(h.itemView.getContext())
+                        .load(message.getImageUrl())
+                        .placeholder(R.drawable.profile)
+                        .error(R.drawable.profile)
+                        .into(h.binding.imageViewMessageReceived);
                 h.binding.imageViewMessageReceived.setOnClickListener(v -> {
-                    if (onImageClickListener != null) onImageClickListener.onImageClick(message.getImageUrl());
+                    if (onImageClickListener != null) {
+                        onImageClickListener.onImageClick(message.getImageUrl());
+                    }
                 });
             } else if ("video".equals(message.getType())) {
                 h.binding.layoutMediaReceived.setVisibility(View.VISIBLE);
                 h.binding.imageViewPlayIconReceived.setVisibility(View.VISIBLE);
                 h.binding.textViewMessageReceived.setVisibility(View.GONE);
-                Glide.with(h.itemView.getContext()).load(message.getImageUrl()).into(h.binding.imageViewMessageReceived);
-                h.binding.layoutMediaReceived.setOnClickListener(v -> {
-                    if (onVideoClickListener != null) onVideoClickListener.onVideoClick(message.getImageUrl());
-                });
+                // Загружаем превью видео
+                Glide.with(h.itemView.getContext())
+                        .load(message.getImageUrl())
+                        .placeholder(R.drawable.profile)
+                        .error(R.drawable.profile)
+                        .into(h.binding.imageViewMessageReceived);
+                // Клик по иконке Play или по всему контейнеру
+                View.OnClickListener videoClickListener = v -> {
+                    String videoUrl = message.getImageUrl();
+                    if (onVideoClickListener != null) {
+                        onVideoClickListener.onVideoClick(videoUrl);
+                    } else {
+                        openVideo(videoUrl);
+                    }
+                };
+                h.binding.layoutMediaReceived.setOnClickListener(videoClickListener);
+                h.binding.imageViewPlayIconReceived.setOnClickListener(videoClickListener);
+                h.binding.imageViewMessageReceived.setOnClickListener(null);
             } else if ("audio".equals(message.getType())) {
                 h.binding.layoutAudioReceived.setVisibility(View.VISIBLE);
                 h.binding.textViewMessageReceived.setVisibility(View.GONE);
-                
+
                 boolean isPlaying = playingPosition == position;
                 h.binding.buttonPlayAudioReceived.setImageResource(isPlaying ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
                 h.binding.buttonPlayAudioReceived.setOnClickListener(v -> toggleAudio(h.itemView.getContext(), message.getImageUrl(), position));
             } else {
                 h.binding.textViewMessageReceived.setVisibility(View.VISIBLE);
+                h.binding.textViewMessageReceived.setText(message.getText());
             }
             h.binding.textViewMessageReceived.setText(message.getText());
             h.binding.textViewTimeReceived.setText(time);
@@ -183,13 +233,71 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (playIcon != null) playIcon.setVisibility(View.GONE);
     }
 
-    private void openVideo(android.content.Context context, String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.parse(url), "video/*");
-        context.startActivity(intent);
+    /**
+     * Открывает видео через Intent
+     */
+    private void openVideo(String videoPath) {
+        if (context == null || videoPath == null || videoPath.isEmpty()) {
+            if (context != null) {
+                Toast.makeText(context, "Видео не найдено", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+
+        try {
+            // Проверяем, является ли путь URL
+            if (videoPath.startsWith("http://") || videoPath.startsWith("https://")) {
+                // Открываем URL в браузере или видеоплеере
+                Uri uri = Uri.parse(videoPath);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.setDataAndType(uri, "video/*");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                if (intent.resolveActivity(context.getPackageManager()) != null) {
+                    context.startActivity(intent);
+                } else {
+                    // Если нет видеоплеера, пробуем открыть в браузере
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+                    browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    if (browserIntent.resolveActivity(context.getPackageManager()) != null) {
+                        context.startActivity(browserIntent);
+                    } else {
+                        Toast.makeText(context, "Нет приложения для открытия видео", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                return;
+            }
+
+            // Локальный файл
+            File videoFile = new File(videoPath);
+            if (!videoFile.exists()) {
+                Toast.makeText(context, "Файл видео не найден", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Uri uri = FileProvider.getUriForFile(
+                    context,
+                    context.getPackageName() + ".fileprovider",
+                    videoFile
+            );
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(uri, "video/*");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            if (intent.resolveActivity(context.getPackageManager()) != null) {
+                context.startActivity(intent);
+            } else {
+                Toast.makeText(context, "Нет приложения для открытия видео", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Ошибка открытия видео: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void toggleAudio(android.content.Context context, String url, int position) {
+    private void toggleAudio(Context context, String url, int position) {
         if (playingPosition == position) {
             stopAudio();
         } else {
@@ -197,7 +305,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private void playAudio(android.content.Context context, String url, int position) {
+    private void playAudio(Context context, String url, int position) {
         stopAudio();
         try {
             mediaPlayer = new MediaPlayer();
@@ -208,16 +316,32 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 playingPosition = position;
                 notifyItemChanged(position);
             });
-            mediaPlayer.setOnCompletionListener(mp -> stopAudio());
+            mediaPlayer.setOnCompletionListener(mp -> {
+                stopAudio();
+                if (mediaPlayer != null) {
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+                }
+            });
+            mediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                Toast.makeText(context, "Ошибка воспроизведения аудио", Toast.LENGTH_SHORT).show();
+                stopAudio();
+                return true;
+            });
         } catch (Exception e) {
-            Toast.makeText(context, "Ошибка воспроизведения", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+            Toast.makeText(context, "Ошибка воспроизведения: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void stopAudio() {
         if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
+            try {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             mediaPlayer = null;
             int oldPos = playingPosition;
             playingPosition = -1;
@@ -228,6 +352,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemCount() {
         return messages.size();
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        stopAudio();
     }
 
     static class SentViewHolder extends RecyclerView.ViewHolder {

@@ -48,6 +48,7 @@ dependencies {
     implementation("org.jitsi.react:jitsi-meet-sdk:+") {
         isTransitive = true
     }
+    implementation("com.google.android.exoplayer:exoplayer:2.19.1")
     implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
     implementation(libs.material)
     implementation(libs.constraintlayout)
