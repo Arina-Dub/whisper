@@ -53,8 +53,18 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             fetchUserDataAndNavigate(email, password);
                         } else {
-                            Toast.makeText(requireContext(), "Ошибка входа: " + task.getException().getMessage(),
-                                    Toast.LENGTH_LONG).show();
+                            String errorMessage;
+                            Exception exception = task.getException();
+                            
+                            if (exception instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
+                                errorMessage = getString(R.string.error_invalid_password);
+                            } else if (exception instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
+                                errorMessage = getString(R.string.error_user_not_found);
+                            } else {
+                                errorMessage = exception != null ? exception.getMessage() : getString(R.string.error_login_failed);
+                            }
+                            
+                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show();
                         }
                     });
         });
@@ -64,6 +74,11 @@ public class LoginFragment extends Fragment {
         binding.textViewRegister.setOnClickListener(v -> {
             NavHostFragment.findNavController(LoginFragment.this)
                     .navigate(R.id.action_LoginFragment_to_RegisterFragment);
+        });
+
+        binding.textViewForgotPassword.setOnClickListener(v -> {
+            NavHostFragment.findNavController(LoginFragment.this)
+                    .navigate(R.id.action_LoginFragment_to_ForgotPasswordFragment);
         });
     }
 
@@ -104,7 +119,7 @@ public class LoginFragment extends Fragment {
                 public void onAccountDelete(String email) {
                     prefs.removeAccount(email);
                     dialog.dismiss();
-                    showSavedAccountsDialog(); // Refresh
+                    showSavedAccountsDialog();
                 }
             });
 
@@ -137,7 +152,6 @@ public class LoginFragment extends Fragment {
                 }
             }
             
-            // Сохраняем для быстрого входа
             prefs.saveAccount(email, password, name, avatar);
 
             Toast.makeText(requireContext(), "Вход выполнен", Toast.LENGTH_SHORT).show();
@@ -148,7 +162,6 @@ public class LoginFragment extends Fragment {
             AppPreferences prefs = new AppPreferences(requireContext());
             prefs.setIsLoggedIn(true);
             prefs.setUserEmail(email);
-            // Сохраняем даже при ошибке получения профиля
             prefs.saveAccount(email, password, "", "");
 
             NavHostFragment.findNavController(LoginFragment.this)

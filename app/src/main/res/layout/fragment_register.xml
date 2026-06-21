@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:padding="24dp">
 
-            <!-- Заголовок и переход ко входу -->
             <TextView
                 android:id="@+id/textViewTitle"
                 android:layout_width="wrap_content"
@@ -39,7 +38,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textViewTitle" />
 
-            <!-- Группа полей ввода -->
             <LinearLayout
                 android:id="@+id/layoutInputs"
                 android:layout_width="match_parent"
@@ -105,7 +103,6 @@
 
             </LinearLayout>
 
-            <!-- Кнопка регистрации -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonRegister"
                 android:layout_width="match_parent"
@@ -121,7 +118,6 @@
                 app:layout_constraintVertical_bias="0.7"
                 android:layout_marginBottom="32dp" />
 
-            <!-- Брендовое название -->
             <TextView
                 android:id="@+id/textViewBrand"
                 android:layout_width="wrap_content"

@@ -47,7 +47,6 @@ public class IncomingCallFragment extends Fragment {
             binding.textViewIncomingName.setText(callerName);
         }
         
-        // Загружаем аватарку звонящего
         if (senderId != null) {
             db.collection("users").document(senderId).get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists() && isAdded() && binding != null) {

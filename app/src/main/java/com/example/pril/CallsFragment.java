@@ -28,10 +28,7 @@ public class CallsFragment extends Fragment {
     private String currentUserId;
 
     @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentCallsBinding.inflate(inflater, container, false);
         db = FirebaseFirestore.getInstance();
         currentUserId = FirebaseAuth.getInstance().getUid();
@@ -129,7 +126,6 @@ public class CallsFragment extends Fragment {
                             }
                         }
                         
-                        // Сортируем локально по времени
                         calls.sort((c1, c2) -> {
                             if (c1.getTimestamp() == null) return 1;
                             if (c2.getTimestamp() == null) return -1;

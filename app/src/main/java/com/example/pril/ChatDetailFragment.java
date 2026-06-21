@@ -387,11 +387,6 @@ public class ChatDetailFragment extends Fragment {
                 .setTitle("Выберите действие")
                 .setItems(options, (dialog, which) -> {
                     if (options[which].equals("Удалить у меня")) {
-                        // Deleting locally for one user is usually handled by a field like 'deletedBy'
-                        // but since we want to keep it simple, let's just delete the doc if it's "delete for me"
-                        // Or if we want true "delete for everyone", we delete the doc.
-                        // For simplicity, let's make "Delete for me" remove it from the list locally (doesn't survive sync)
-                        // or just implement "Delete for everyone" as the main one.
                         deleteMessage(message.getMessageId());
                     } else if (options[which].equals("Удалить у всех")) {
                         deleteMessage(message.getMessageId());
@@ -414,7 +409,6 @@ public class ChatDetailFragment extends Fragment {
     private void updateLastMessageAfterDeletion() {
         if (chatId == null) return;
         
-        // Find the last message after deletion
         db.collection("chats").document(chatId).collection("messages")
                 .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
                 .limit(1)
@@ -438,7 +432,6 @@ public class ChatDetailFragment extends Fragment {
     private void sendMessage(String text, String type, String imageUrl) {
         if (chatId == null || currentUserId == null || receiverId == null) return;
         Map<String, Object> message = new HashMap<>();
-        // Если text == null, сохраняем пустую строку
         message.put("text", text != null ? text : "");
         message.put("senderId", currentUserId);
         message.put("receiverId", receiverId);
@@ -449,7 +442,6 @@ public class ChatDetailFragment extends Fragment {
         db.collection("chats").document(chatId).collection("messages").add(message);
 
         Map<String, Object> chatUpdate = new HashMap<>();
-        // Для lastMessage лучше использовать специальный текст, например "Фото" или "Видео"
         String lastMessageText = text != null && !text.isEmpty() ? text : getMediaTypeText(type);
         chatUpdate.put("lastMessage", lastMessageText);
         chatUpdate.put("lastMessageTime", com.google.firebase.firestore.FieldValue.serverTimestamp());
@@ -458,7 +450,6 @@ public class ChatDetailFragment extends Fragment {
         db.collection("chats").document(chatId).set(chatUpdate, com.google.firebase.firestore.SetOptions.merge());
     }
 
-    // Добавьте вспомогательный метод для красивого отображения типа медиа в последнем сообщении
     private String getMediaTypeText(String type) {
         if (type == null) return "Сообщение";
         switch (type) {
@@ -500,8 +491,6 @@ public class ChatDetailFragment extends Fragment {
             @Override
             public void onSuccess(String fileUrl) {
                 if (isAdded()) {
-                    // Для медиафайлов отправляем пустую строку или null
-                    // Если хотите показывать иконку/превью, но без текста
                     sendMessage(null, forcedType, fileUrl);
                 }
             }

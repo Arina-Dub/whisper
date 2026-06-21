@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true">
 
-    <!-- Header -->
     <LinearLayout
         android:id="@+id/chatHeader"
         android:layout_width="match_parent"
@@ -74,7 +73,6 @@
 
     </LinearLayout>
 
-    <!-- Сообщения -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMessages"
         android:layout_width="match_parent"
@@ -84,7 +82,6 @@
         android:clipToPadding="false"
         android:isScrollContainer="true" />
 
-    <!-- Поле ввода -->
     <LinearLayout
         android:id="@+id/layoutInput"
         android:layout_width="match_parent"
@@ -93,7 +90,6 @@
         android:gravity="center_vertical"
         android:orientation="vertical">
 
-        <!-- Нижний отступ для безрамочных экранов -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

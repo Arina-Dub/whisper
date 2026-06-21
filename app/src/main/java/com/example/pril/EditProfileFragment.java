@@ -191,8 +191,6 @@ public class EditProfileFragment extends Fragment {
         db.collection("users").document(uid).update(updates)
                 .addOnSuccessListener(aVoid -> {
                     if (binding == null) return;
-                    
-                    // Обновляем локальные настройки
                     prefs.setUserName(name);
                     if (avatarUrl != null) {
                         prefs.setAvatarUri(avatarUrl);

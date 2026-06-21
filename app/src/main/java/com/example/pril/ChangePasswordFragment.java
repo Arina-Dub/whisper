@@ -57,7 +57,6 @@ public class ChangePasswordFragment extends Fragment {
 
         binding.buttonSavePassword.setEnabled(false);
 
-        // Принудительное обновление данных пользователя
         user.reload().addOnCompleteListener(reloadTask -> {
             if (!reloadTask.isSuccessful()) {
                 binding.buttonSavePassword.setEnabled(true);
@@ -68,7 +67,6 @@ public class ChangePasswordFragment extends Fragment {
             AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPass);
             user.reauthenticate(credential).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    Log.d("AuthLog", "Password check: Success");
                     user.updatePassword(newPass).addOnCompleteListener(passTask -> {
                         if (passTask.isSuccessful()) {
                             Toast.makeText(requireContext(), "Пароль изменен", Toast.LENGTH_SHORT).show();
@@ -76,7 +74,6 @@ public class ChangePasswordFragment extends Fragment {
                         } else {
                             binding.buttonSavePassword.setEnabled(true);
                             Exception e = passTask.getException();
-                            Log.e("AuthLog", "Password update failed", e);
                             String err = e != null ? e.getMessage() : "Ошибка";
                             Toast.makeText(requireContext(), "Firebase Pass Error: " + err, Toast.LENGTH_LONG).show();
                         }
@@ -84,7 +81,6 @@ public class ChangePasswordFragment extends Fragment {
                 } else {
                     binding.buttonSavePassword.setEnabled(true);
                     Exception e = task.getException();
-                    Log.e("AuthLog", "Password check: Failed", e);
                     Toast.makeText(requireContext(), "Ошибка: " + (e != null ? e.getMessage() : "неверный старый пароль"), Toast.LENGTH_LONG).show();
                 }
             });

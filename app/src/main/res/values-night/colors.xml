@@ -3,7 +3,6 @@
     <color name="gradient_start">#990063</color>
     <color name="gradient_end">#000000</color>
 
-    <!-- Переопределяем цвета для темной темы -->
     <color name="black">#FFFFFF</color>
     <color name="white">#000000</color>
     <color name="background_light">#121212</color>

@@ -26,8 +26,6 @@ public class MainService extends Service {
         super.onCreate();
         db = FirebaseFirestore.getInstance();
         currentUserId = FirebaseAuth.getInstance().getUid();
-        
-        // Создаем каналы при создании сервиса
         createNotificationChannels();
     }
 
@@ -36,7 +34,6 @@ public class MainService extends Service {
             android.app.NotificationManager manager = getSystemService(android.app.NotificationManager.class);
             if (manager == null) return;
 
-            // Канал для уведомлений о сообщениях (Высокий приоритет)
             android.app.NotificationChannel alertChannel = new android.app.NotificationChannel(
                     NotificationHelper.CHANNEL_ID,
                     "Messenger Notifications",
@@ -44,7 +41,6 @@ public class MainService extends Service {
             );
             manager.createNotificationChannel(alertChannel);
 
-            // Канал для статуса сервиса (Минимальный приоритет, чтобы не мешал)
             android.app.NotificationChannel statusChannel = new android.app.NotificationChannel(
                     STATUS_CHANNEL_ID,
                     "Service Status",
@@ -62,7 +58,6 @@ public class MainService extends Service {
             return START_NOT_STICKY;
         }
 
-        // Для Foreground Service используем тихий канал
         Notification notification = new NotificationCompat.Builder(this, STATUS_CHANNEL_ID)
                 .setContentTitle("Whisper")
                 .setContentText("Поиск новых сообщений...")
@@ -72,9 +67,7 @@ public class MainService extends Service {
                 .build();
 
         startForeground(1001, notification);
-        
         startListeners();
-        
         return START_STICKY;
     }
 
@@ -84,7 +77,6 @@ public class MainService extends Service {
         }
         if (currentUserId == null) return;
 
-        // Слушаем сообщения
         if (messageListener == null) {
             messageListener = db.collection("chats")
                     .whereArrayContains("participants", currentUserId)
@@ -110,7 +102,7 @@ public class MainService extends Service {
                                         Intent intent = new Intent(this, MainActivity.class);
                                         intent.putExtra("type", "chat");
                                         intent.putExtra("chatId", chatId);
-                                        intent.putExtra("receiverId", lastSenderId); // Чтобы знать, с кем чат
+                                        intent.putExtra("receiverId", lastSenderId);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         
                                         NotificationHelper.showNotification(this, "Новое сообщение", lastMessage, intent);
@@ -121,7 +113,6 @@ public class MainService extends Service {
                     });
         }
 
-        // Слушаем звонки
         if (callListener == null) {
             callListener = db.collection("calls")
                     .whereEqualTo("receiverId", currentUserId)

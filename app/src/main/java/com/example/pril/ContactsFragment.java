@@ -89,7 +89,6 @@ public class ContactsFragment extends Fragment {
             for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
                 UserModel user = doc.toObject(UserModel.class);
                 if (user != null) {
-                    // Используем ID документа как UID, если поле внутри документа пустое
                     String uid = user.getUid() != null ? user.getUid() : doc.getId();
                     if (!uid.equals(currentUserId)) {
                         contactList.add(new ContactModel(

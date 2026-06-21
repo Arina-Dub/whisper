@@ -27,11 +27,7 @@ public class SplashFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
-        // Начальное состояние
         binding.imageViewSplash.setRotation(0);
-        
-        // Запускаем цепочку плавных поворотов
         rotateStep(90);
     }
 
@@ -43,7 +39,6 @@ public class SplashFragment extends Fragment {
                 .setDuration(500)
                 .setInterpolator(new AccelerateDecelerateInterpolator())
                 .withEndAction(() -> {
-                    // Пауза 0.1 сек
                     handler.postDelayed(() -> {
                         if (targetRotation < 360) {
                             rotateStep(targetRotation + 90);

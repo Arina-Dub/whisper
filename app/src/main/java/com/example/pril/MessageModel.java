@@ -8,14 +8,13 @@ public class MessageModel {
     private String senderId;
     private String receiverId;
     private String imageUrl;
-    private String type; // "text" or "image"
+    private String type;
     private boolean read;
     private String messageId;
     @ServerTimestamp
     private Timestamp timestamp;
 
     public MessageModel() {
-        // Required for Firebase
     }
 
     public MessageModel(String text, String senderId, String receiverId, String type) {

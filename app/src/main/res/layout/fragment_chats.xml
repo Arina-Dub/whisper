@@ -8,7 +8,6 @@
     android:padding="16dp"
     android:paddingTop="24dp">
 
-    <!-- Заголовок -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -18,7 +17,6 @@
 
     <Space android:layout_width="match_parent" android:layout_height="16dp" />
 
-    <!-- Поиск -->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchViewChats"
         style="@style/AppSearchView"
@@ -30,14 +28,12 @@
 
     <Space android:layout_width="match_parent" android:layout_height="16dp" />
 
-    <!-- Список чатов -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewChats"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- FAB для добавления -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddChat"
         android:layout_width="wrap_content"

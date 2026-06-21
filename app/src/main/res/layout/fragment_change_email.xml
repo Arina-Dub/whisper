@@ -8,7 +8,6 @@
     android:padding="16dp"
     android:paddingTop="24dp">
 
-    <!-- Заголовок -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -27,7 +26,6 @@
 
     <Space android:layout_width="match_parent" android:layout_height="32dp" />
 
-    <!-- Новый Email -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,7 +46,6 @@
 
     <Space android:layout_width="match_parent" android:layout_height="16dp" />
 
-    <!-- Подтверждение паролем -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,7 +67,6 @@
 
     <Space android:layout_width="match_parent" android:layout_height="32dp" />
 
-    <!-- Кнопка сохранения -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonSaveEmail"
         style="@style/PrimaryButton"

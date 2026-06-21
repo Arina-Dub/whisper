@@ -20,10 +20,7 @@ public class RegisterFragment extends Fragment {
     private FirebaseFirestore db;
 
     @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentRegisterBinding.inflate(inflater, container, false);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -82,10 +79,7 @@ public class RegisterFragment extends Fragment {
                     prefs.setIsLoggedIn(true);
                     prefs.setUserName(name);
                     prefs.setUserEmail(email);
-                    
-                    // Сохраняем в список для быстрого входа
                     prefs.saveAccount(email, password, name, null);
-
                     binding.progressBarRegister.setVisibility(View.GONE);
                     Toast.makeText(requireContext(), "Регистрация успешна!", Toast.LENGTH_SHORT).show();
                     NavHostFragment.findNavController(RegisterFragment.this)

@@ -61,13 +61,10 @@ public class ChangeEmailFragment extends Fragment {
         }
 
         binding.buttonSaveEmail.setEnabled(false);
-        Log.d("AuthLog", "Starting update for: " + user.getEmail());
 
         AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), password);
         user.reauthenticate(credential).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Log.d("AuthLog", "Re-authentication successful. Sending verification to: " + newEmail);
-                
                 user.verifyBeforeUpdateEmail(newEmail).addOnCompleteListener(emailTask -> {
                     binding.buttonSaveEmail.setEnabled(true);
                     if (emailTask.isSuccessful()) {
@@ -75,7 +72,6 @@ public class ChangeEmailFragment extends Fragment {
                         NavHostFragment.findNavController(this).navigateUp();
                     } else {
                         Exception e = emailTask.getException();
-                        Log.e("AuthLog", "Email update verification failed", e);
                         String err = e != null ? e.getMessage() : "Неизвестная ошибка";
                         
                         if (err.contains("operation is not allowed")) {
@@ -88,7 +84,6 @@ public class ChangeEmailFragment extends Fragment {
             } else {
                 binding.buttonSaveEmail.setEnabled(true);
                 Exception e = task.getException();
-                Log.e("AuthLog", "Re-authentication failed", e);
                 Toast.makeText(requireContext(), "Ошибка проверки пароля: " + (e != null ? e.getMessage() : "Неверный пароль"), Toast.LENGTH_LONG).show();
             }
         });

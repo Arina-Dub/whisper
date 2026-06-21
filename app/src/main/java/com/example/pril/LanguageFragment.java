@@ -34,7 +34,6 @@ public class LanguageFragment extends Fragment {
             String newLang = (checkedId == R.id.radioRussian) ? "ru" : "en";
             if (!newLang.equals(prefs.getLanguage())) {
                 prefs.setLanguage(newLang);
-                // Перезапускаем активность для применения языка
                 if (getActivity() != null) {
                     getActivity().recreate();
                 }

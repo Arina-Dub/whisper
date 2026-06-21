@@ -121,7 +121,6 @@ public class ChatsFragment extends Fragment {
                         List<String> participants = (List<String>) doc.get("participants");
                         chat.setParticipants(participants);
 
-                        // Устанавливаем сохраненный счетчик
                         Integer savedCount = chatUnreadCounts.get(chatId);
                         chat.setUnreadCount(savedCount != null ? savedCount : 0);
 
@@ -151,7 +150,6 @@ public class ChatsFragment extends Fragment {
                             });
                         }
 
-                        // Слушатель непрочитанных сообщений (один на чат)
                         if (!unreadListeners.containsKey(chatId)) {
                             unreadListeners.put(chatId, db.collection("chats").document(chatId).collection("messages")
                                     .whereEqualTo("read", false)
@@ -169,7 +167,6 @@ public class ChatsFragment extends Fragment {
                                         
                                         chatUnreadCounts.put(chatId, count);
                                         
-                                        // Обновляем текущие объекты в списке
                                         boolean changed = false;
                                         for (ChatModel c : chatList) {
                                             if (c.getChatId().equals(chatId)) {
@@ -186,7 +183,6 @@ public class ChatsFragment extends Fragment {
                         displayChats.add(chat);
                     }
                     
-                    // Сортировка локально
                     java.util.Collections.sort(displayChats, (c1, c2) -> {
                         Timestamp t1 = c1.getLastMessageTime();
                         Timestamp t2 = c2.getLastMessageTime();
@@ -207,7 +203,6 @@ public class ChatsFragment extends Fragment {
                 .setTitle(getString(R.string.delete_chat_title))
                 .setMessage("Удалить переписку с " + chat.getName() + "?")
                 .setPositiveButton("Да", (d, w) -> {
-                    // Удаляем текущего пользователя из списка участников чата
                     db.collection("chats").document(chat.getChatId())
                             .update("participants", FieldValue.arrayRemove(currentUserId))
                             .addOnSuccessListener(aVoid -> {

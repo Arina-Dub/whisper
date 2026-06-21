@@ -11,7 +11,6 @@ public class UserModel {
     private com.google.firebase.Timestamp lastSeen;
 
     public UserModel() {
-        // Required for Firebase
     }
 
     public UserModel(String uid, String name, String email, String avatarUrl) {

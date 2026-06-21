@@ -16,7 +16,6 @@ public class ChatModel {
     private com.google.firebase.Timestamp lastMessageTime;
 
     public ChatModel() {
-        // Required for Firebase
     }
 
     public int getUnreadCount() { return unreadCount; }

@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements JitsiMeetActivity
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             int id = destination.getId();
             
-            if (id == R.id.SplashFragment || id == R.id.LoginFragment || id == R.id.RegisterFragment) {
+            if (id == R.id.SplashFragment || id == R.id.LoginFragment || id == R.id.RegisterFragment || id == R.id.ForgotPasswordFragment) {
                 binding.appBarLayout.setVisibility(View.GONE);
                 binding.bottomNav.setVisibility(View.GONE);
             } 
@@ -180,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements JitsiMeetActivity
         }
         if (currentUserId == null || callListener != null) return;
 
-        // Слушаем только свежие вызовы (созданные в последние 5 минут), чтобы избежать "фантомных" звонков при смене темы
         long fiveMinutesAgo = (System.currentTimeMillis() / 1000) - 300;
 
         callListener = db.collection("calls")
@@ -246,7 +245,6 @@ public class MainActivity extends AppCompatActivity implements JitsiMeetActivity
                 bundle.putString("senderId", senderId);
                 bundle.putString("jitsiRoomName", jitsiRoomName);
                 
-                // Очищаем стек до корня и открываем входящий звонок
                 navController.navigate(R.id.ChatsFragment, null, new androidx.navigation.NavOptions.Builder()
                         .setPopUpTo(R.id.nav_graph, true).build());
                 navController.navigate(R.id.IncomingCallFragment, bundle);
@@ -259,14 +257,12 @@ public class MainActivity extends AppCompatActivity implements JitsiMeetActivity
                 bundle.putString("receiverId", receiverId);
                 bundle.putString("contactName", contactName != null ? contactName : getString(R.string.chat_default));
                 
-                // Очищаем стек до корня и открываем нужный чат
                 navController.navigate(R.id.ChatsFragment, null, new androidx.navigation.NavOptions.Builder()
                         .setPopUpTo(R.id.nav_graph, true).build());
                 navController.navigate(R.id.ChatDetailFragment, bundle);
             }
         }
         
-        // Очищаем экстрасы, чтобы не срабатывало при повороте экрана или смене темы
         intent.removeExtra("type");
         intent.removeExtra("callId");
         intent.removeExtra("receiverId");
@@ -303,7 +299,6 @@ public class MainActivity extends AppCompatActivity implements JitsiMeetActivity
                 || super.onSupportNavigateUp();
     }
 
-    // Методы для JitsiMeetActivityInterface
     @Override
     public void requestPermissions(String[] permissions, int requestCode, PermissionListener listener) {
         JitsiMeetActivityDelegate.requestPermissions(this, permissions, requestCode, listener);
@@ -335,12 +330,7 @@ public class MainActivity extends AppCompatActivity implements JitsiMeetActivity
 
     @Override
     public void onBackPressed() {
-        // Если Jitsi активен, он может обработать нажатие (например, закрыть PiP)
         JitsiMeetActivityDelegate.onBackPressed();
-        
-        // Для Navigation component лучше использовать стандартный механизм,
-        // но если мы переопределили onBackPressed, нужно вызвать super.
-        // На Android 13+ рекомендуется использовать OnBackPressedDispatcher.
         super.onBackPressed();
     }
 
@@ -355,7 +345,5 @@ public class MainActivity extends AppCompatActivity implements JitsiMeetActivity
     @Override
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
-        // В новых версиях SDK этот метод может отсутствовать в делегате, 
-        // Jitsi сам обрабатывает PiP через манифест
     }
 }

@@ -13,7 +13,6 @@
         android:padding="16dp"
         android:paddingTop="24dp">
 
-        <!-- Заголовок -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -35,7 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="24dp" />
 
-        <!-- Аватар -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,7 +72,6 @@
             android:layout_width="match_parent"
             android:layout_height="24dp" />
 
-        <!-- Меню -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

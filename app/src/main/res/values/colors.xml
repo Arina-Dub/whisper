@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Основные цвета из дизайна -->
     <color name="background_light">#F6E0EE</color>
     <color name="background_white">#FFFEF5</color>
     <color name="background_dark">#2D2D2D</color>
 
-    <!-- Розовые акценты -->
     <color name="primary_pink">#B80077</color>
     <color name="primary_pink_dark">#990063</color>
     <color name="secondary_pink">#FFBDEC</color>
 
-    <!-- Серые оттенки -->
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="dark_grey_1">#272727</color>

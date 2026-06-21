@@ -8,7 +8,6 @@
     android:padding="16dp"
     android:paddingTop="24dp">
 
-    <!-- Заголовок -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -18,7 +17,6 @@
 
     <Space android:layout_width="match_parent" android:layout_height="24dp" />
 
-    <!-- Настройки уведомлений -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

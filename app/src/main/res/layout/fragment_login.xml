@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:padding="24dp">
 
-            <!-- Заголовок и переход к регистрации -->
             <TextView
                 android:id="@+id/textViewTitle"
                 android:layout_width="wrap_content"
@@ -39,7 +38,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textViewTitle" />
 
-            <!-- Группа полей ввода в центре -->
             <LinearLayout
                 android:id="@+id/layoutInputs"
                 android:layout_width="match_parent"
@@ -87,6 +85,16 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <TextView
+                    android:id="@+id/textViewForgotPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/forgot_password_link"
+                    android:textColor="@color/primary_pink"
+                    android:textSize="14sp" />
+
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -115,7 +123,6 @@
                 app:layout_constraintBottom_toTopOf="@+id/textViewBrand"
                 android:layout_marginTop="8dp" />
 
-            <!-- Брендовое название в самом низу -->
             <TextView
                 android:id="@+id/textViewBrand"
                 android:layout_width="wrap_content"

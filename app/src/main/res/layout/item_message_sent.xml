@@ -43,7 +43,6 @@
                     android:visibility="gone" />
             </RelativeLayout>
 
-            <!-- Панель аудио (Messenger style) -->
             <LinearLayout
                 android:id="@+id/layoutAudioSent"
                 android:layout_width="240dp"

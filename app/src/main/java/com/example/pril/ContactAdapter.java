@@ -75,7 +75,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         notifyDataSetChanged();
     }
 
-    // Method to update the full list when contacts are loaded
     public void updateList(List<ContactModel> newList) {
         this.contactList = new ArrayList<>(newList);
         this.contactListFull.clear();

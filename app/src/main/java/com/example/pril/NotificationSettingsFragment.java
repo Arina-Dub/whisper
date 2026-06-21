@@ -32,10 +32,7 @@ public class NotificationSettingsFragment extends Fragment {
             });
 
     @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentNotificationSettingsBinding.inflate(inflater, container, false);
         prefs = new AppPreferences(requireContext());
         return binding.getRoot();

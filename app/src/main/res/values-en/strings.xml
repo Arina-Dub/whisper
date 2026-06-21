@@ -64,11 +64,19 @@
     <string name="file_from_chat">File from chat</string>
     <string name="delete_chat_title">Delete chat</string>
 
-    <!-- Navigation labels -->
     <string name="chats_label">Chats</string>
     <string name="calls_label">Calls</string>
     <string name="settings_label">Settings</string>
     <string name="lang_russian">Russian</string>
     <string name="lang_english">English</string>
     <string name="search_hint">Search...</string>
+
+    <string name="forgot_password_title">Reset Password</string>
+    <string name="forgot_password_desc">Enter your email and we will send you a link to reset your password.</string>
+    <string name="forgot_password_link">Forgot Password?</string>
+    <string name="send_reset_link">Send Link</string>
+    <string name="reset_link_sent">Password reset link sent to your email</string>
+    <string name="error_invalid_password">Incorrect password</string>
+    <string name="error_user_not_found">User not found</string>
+    <string name="error_login_failed">Login failed</string>
 </resources>

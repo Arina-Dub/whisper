@@ -64,11 +64,19 @@
     <string name="file_from_chat">Файл из чата</string>
     <string name="delete_chat_title">Удалить чат</string>
 
-    <!-- Navigation labels -->
     <string name="chats_label">Чаты</string>
     <string name="calls_label">Звонки</string>
     <string name="settings_label">Настройки</string>
     <string name="lang_russian">Русский</string>
     <string name="lang_english">English</string>
     <string name="search_hint">Поиск...</string>
+
+    <string name="forgot_password_title">Восстановление пароля</string>
+    <string name="forgot_password_desc">Введите ваш email, и мы отправим вам ссылку для сброса пароля.</string>
+    <string name="forgot_password_link">Забыли пароль?</string>
+    <string name="send_reset_link">Отправить ссылку</string>
+    <string name="reset_link_sent">Ссылка для сброса пароля отправлена на ваш email</string>
+    <string name="error_invalid_password">Неверный пароль</string>
+    <string name="error_user_not_found">Пользователь не найден</string>
+    <string name="error_login_failed">Ошибка входа</string>
 </resources>

@@ -32,7 +32,6 @@ public class AppPreferences {
             String saved = prefs.getString(KEY_SAVED_ACCOUNTS, "[]");
             accounts = new org.json.JSONArray(saved);
             
-            // Check if already exists
             int existingIndex = -1;
             for (int i = 0; i < accounts.length(); i++) {
                 if (accounts.getJSONObject(i).getString("email").equals(email)) {

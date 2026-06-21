@@ -80,11 +80,9 @@ public class FileUploader {
                     else if (mime.contains("audio")) fileName += ".3gp";
                 }
 
-                // Litterbox is the most stable for our use case.
                 String boundary = "UploadBoundary" + System.currentTimeMillis();
                 URL url = new URL("https://litterbox.catbox.moe/resources/internals/api.php");
                 
-                // CRITICAL: Bypass all SSL checks for older devices and hosting quirks
                 applySslBypass();
                 
                 conn = (HttpURLConnection) url.openConnection();
@@ -96,17 +94,14 @@ public class FileUploader {
                 try (OutputStream os = conn.getOutputStream()) {
                     String boundaryLine = "--" + boundary + "\r\n";
 
-                    // Part 1: reqtype
                     os.write(boundaryLine.getBytes(StandardCharsets.UTF_8));
                     os.write("Content-Disposition: form-data; name=\"reqtype\"\r\n\r\n".getBytes(StandardCharsets.UTF_8));
                     os.write("fileupload\r\n".getBytes(StandardCharsets.UTF_8));
 
-                    // Part 2: time
                     os.write(boundaryLine.getBytes(StandardCharsets.UTF_8));
                     os.write("Content-Disposition: form-data; name=\"time\"\r\n\r\n".getBytes(StandardCharsets.UTF_8));
                     os.write("24h\r\n".getBytes(StandardCharsets.UTF_8));
 
-                    // Part 3: fileToUpload
                     os.write(boundaryLine.getBytes(StandardCharsets.UTF_8));
                     os.write(("Content-Disposition: form-data; name=\"fileToUpload\"; filename=\"" + fileName + "\"\r\n").getBytes(StandardCharsets.UTF_8));
                     os.write("Content-Type: application/octet-stream\r\n\r\n".getBytes(StandardCharsets.UTF_8));

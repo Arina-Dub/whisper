@@ -115,13 +115,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 h.binding.layoutMediaSent.setVisibility(View.VISIBLE);
                 h.binding.imageViewPlayIconSent.setVisibility(View.VISIBLE);
                 h.binding.textViewMessageSent.setVisibility(View.GONE);
-                // Загружаем превью видео
                 Glide.with(h.itemView.getContext())
                         .load(message.getImageUrl())
                         .placeholder(R.drawable.profile)
                         .error(R.drawable.profile)
                         .into(h.binding.imageViewMessageSent);
-                // Клик по иконке Play или по всему контейнеру
                 View.OnClickListener videoClickListener = v -> {
                     String videoUrl = message.getImageUrl();
                     if (onVideoClickListener != null) {
@@ -147,7 +145,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             h.binding.textViewMessageSent.setText(message.getText());
             h.binding.textViewTimeSent.setText(time);
 
-            // Устанавливаем статус прочтения
             if (message.isRead()) {
                 h.binding.imageViewStatusSent.setImageResource(R.drawable.ic_double_check);
                 h.binding.imageViewStatusSent.setColorFilter(0xFF00E676);
@@ -185,13 +182,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 h.binding.layoutMediaReceived.setVisibility(View.VISIBLE);
                 h.binding.imageViewPlayIconReceived.setVisibility(View.VISIBLE);
                 h.binding.textViewMessageReceived.setVisibility(View.GONE);
-                // Загружаем превью видео
                 Glide.with(h.itemView.getContext())
                         .load(message.getImageUrl())
                         .placeholder(R.drawable.profile)
                         .error(R.drawable.profile)
                         .into(h.binding.imageViewMessageReceived);
-                // Клик по иконке Play или по всему контейнеру
                 View.OnClickListener videoClickListener = v -> {
                     String videoUrl = message.getImageUrl();
                     if (onVideoClickListener != null) {
@@ -233,9 +228,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (playIcon != null) playIcon.setVisibility(View.GONE);
     }
 
-    /**
-     * Открывает видео через Intent
-     */
     private void openVideo(String videoPath) {
         if (context == null || videoPath == null || videoPath.isEmpty()) {
             if (context != null) {
@@ -245,9 +237,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         try {
-            // Проверяем, является ли путь URL
             if (videoPath.startsWith("http://") || videoPath.startsWith("https://")) {
-                // Открываем URL в браузере или видеоплеере
                 Uri uri = Uri.parse(videoPath);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 intent.setDataAndType(uri, "video/*");
@@ -256,7 +246,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 if (intent.resolveActivity(context.getPackageManager()) != null) {
                     context.startActivity(intent);
                 } else {
-                    // Если нет видеоплеера, пробуем открыть в браузере
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
                     browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     if (browserIntent.resolveActivity(context.getPackageManager()) != null) {
@@ -268,7 +257,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 return;
             }
 
-            // Локальный файл
             File videoFile = new File(videoPath);
             if (!videoFile.exists()) {
                 Toast.makeText(context, "Файл видео не найден", Toast.LENGTH_SHORT).show();

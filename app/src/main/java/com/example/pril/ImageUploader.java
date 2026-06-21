@@ -18,8 +18,7 @@ import org.json.JSONObject;
 
 public class ImageUploader {
 
-    // ВАЖНО: Пользователь должен получить свой API ключ на https://api.imgbb.com/
-    private static final String API_KEY = "897615af70815ef6556928edb7d053dc"; // Это временный ключ, лучше использовать свой
+    private static final String API_KEY = "897615af70815ef6556928edb7d053dc";
 
     public interface UploadCallback {
         void onSuccess(String imageUrl);
@@ -29,12 +28,10 @@ public class ImageUploader {
     public static void uploadImage(Context context, Uri imageUri, UploadCallback callback) {
         new Thread(() -> {
             try {
-                // Превращаем изображение в Base64
                 InputStream inputStream = context.getContentResolver().openInputStream(imageUri);
                 byte[] bytes = getBytes(inputStream);
                 String base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
 
-                // Отправляем POST запрос на ImgBB
                 URL url = new URL("https://api.imgbb.com/1/upload?key=" + API_KEY);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -47,7 +44,6 @@ public class ImageUploader {
                     os.write(postDataBytes);
                 }
 
-                // Читаем ответ
                 Scanner s = new Scanner(conn.getInputStream()).useDelimiter("\\A");
                 String response = s.hasNext() ? s.next() : "";
                 

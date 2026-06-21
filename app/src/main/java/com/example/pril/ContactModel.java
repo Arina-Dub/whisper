@@ -7,7 +7,6 @@ public class ContactModel {
     private String avatarUrl;
 
     public ContactModel() {
-        // Required for Firebase
     }
 
     public ContactModel(String uid, String name, String phoneNumber, String avatarUrl) {

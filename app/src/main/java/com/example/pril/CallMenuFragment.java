@@ -131,13 +131,11 @@ public class CallMenuFragment extends Fragment {
             BroadcastEvent event = new BroadcastEvent(intent);
             switch (event.getType()) {
                 case CONFERENCE_JOINED:
-                    Log.d("CallMenu", "CONFERENCE_JOINED");
                     if (isIncoming && !isTimerStarted) {
                         startCallTimer();
                     }
                     break;
                 case PARTICIPANT_JOINED:
-                    Log.d("CallMenu", "PARTICIPANT_JOINED");
                     stopDialTone();
                     if (binding != null) {
                         binding.textViewCallStatus.setVisibility(View.GONE);
@@ -150,7 +148,6 @@ public class CallMenuFragment extends Fragment {
                     }
                     break;
                 case CONFERENCE_TERMINATED:
-                    Log.d("CallMenu", "CONFERENCE_TERMINATED");
                     endCall();
                     break;
             }
@@ -168,7 +165,6 @@ public class CallMenuFragment extends Fragment {
         }
 
         startTimer();
-        Log.d("CallMenu", "Timer started");
     }
 
     private void startDialTone() {
@@ -266,21 +262,16 @@ public class CallMenuFragment extends Fragment {
         isSpeakerOn = !isSpeakerOn;
 
         try {
-            // Используем AudioManager для управления динамиком
             if (audioManager != null) {
                 audioManager.setSpeakerphoneOn(isSpeakerOn);
             }
 
-            // Отправляем команду в Jitsi
             Intent intent = new Intent("org.jitsi.meet.SET_AUDIO_OUTPUT");
             intent.putExtra("output", isSpeakerOn ? "speaker" : "earpiece");
             LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent);
 
-            Log.d("CallMenu", "Speaker mode: " + (isSpeakerOn ? "ON" : "OFF"));
-
         } catch (Exception e) {
             Log.e("CallMenu", "Error toggling speaker", e);
-            // Fallback
             if (audioManager != null) {
                 audioManager.setSpeakerphoneOn(isSpeakerOn);
             }
@@ -410,7 +401,6 @@ public class CallMenuFragment extends Fragment {
 
     private void joinRoom() {
         if (jitsiRoomName == null) return;
-        Log.d("CallLog", "Joining Jitsi room: " + jitsiRoomName);
 
         if (!isIncoming) {
             new Handler().postDelayed(this::startDialTone, 1000);
@@ -439,7 +429,6 @@ public class CallMenuFragment extends Fragment {
         callStatusListener = db.collection("calls").document(callId).addSnapshotListener((value, error) -> {
             if (value != null && value.exists()) {
                 String status = value.getString("status");
-                Log.d("CallLog", "Call status update: " + status);
 
                 if ("ENDED".equals(status)) {
                     playDisconnectTone();

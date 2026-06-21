@@ -5,13 +5,11 @@
     android:layout_height="match_parent"
     android:background="@color/background_dark">
 
-    <!-- Контейнер для Jitsi View -->
     <FrameLayout
         android:id="@+id/jitsiContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Ваш кастомный интерфейс поверх Jitsi -->
     <LinearLayout
         android:id="@+id/layoutOverlay"
         android:layout_width="match_parent"

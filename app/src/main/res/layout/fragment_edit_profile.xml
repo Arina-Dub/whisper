@@ -8,7 +8,6 @@
     android:padding="16dp"
     android:paddingTop="24dp">
 
-    <!-- Заголовок -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -26,7 +25,6 @@
 
     <Space android:layout_width="match_parent" android:layout_height="24dp" />
 
-    <!-- Аватар -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -61,7 +59,6 @@
 
     <Space android:layout_width="match_parent" android:layout_height="24dp" />
 
-    <!-- Поле Имя -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -82,7 +79,6 @@
 
     <Space android:layout_width="match_parent" android:layout_height="16dp" />
 
-    <!-- Ссылки на смену email/пароля -->
     <TextView
         android:id="@+id/textViewChangeEmail"
         android:layout_width="match_parent"
@@ -116,13 +112,11 @@
 
     <Space android:layout_width="match_parent" android:layout_height="24dp" />
 
-    <!-- Кнопка сохранения -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonSaveProfile"
         style="@style/PrimaryButton"
         android:text="@string/save_changes" />
 
-    <!-- ProgressBar -->
     <ProgressBar
         android:id="@+id/progressBarEditProfile"
         android:layout_width="wrap_content"

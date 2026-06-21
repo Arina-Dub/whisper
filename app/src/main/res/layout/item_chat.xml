@@ -8,7 +8,6 @@
     android:orientation="horizontal"
     android:padding="12dp">
 
-    <!-- Аватар -->
     <androidx.cardview.widget.CardView
         android:layout_width="56dp"
         android:layout_height="56dp"
@@ -24,7 +23,6 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Информация -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -52,7 +50,6 @@
             android:textColor="@color/grey_3"
             android:textSize="14sp" />
 
-        <!-- Добавлен TextView для статуса -->
         <TextView
             android:id="@+id/textViewStatus"
             android:layout_width="wrap_content"
@@ -65,7 +62,6 @@
 
     </LinearLayout>
 
-    <!-- Время и счетчик -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

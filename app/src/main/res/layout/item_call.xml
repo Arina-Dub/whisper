@@ -8,7 +8,6 @@
     android:orientation="horizontal"
     android:padding="12dp">
 
-    <!-- Аватар -->
     <ImageView
         android:id="@+id/imageViewCallAvatar"
         android:layout_width="56dp"
@@ -16,7 +15,6 @@
         android:src="@drawable/profile"
         app:shapeAppearanceOverlay="@style/CircleImageView" />
 
-    <!-- Информация -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -44,7 +42,6 @@
 
     </LinearLayout>
 
-    <!-- Кнопка звонка -->
     <ImageButton
         android:id="@+id/imageButtonCall"
         android:layout_width="48dp"

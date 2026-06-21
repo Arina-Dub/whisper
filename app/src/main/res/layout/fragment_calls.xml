@@ -8,16 +8,13 @@
     android:padding="16dp"
     android:paddingTop="24dp">
 
-    <!-- Заголовок -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
     </RelativeLayout>
 
     <Space android:layout_width="match_parent" android:layout_height="16dp" />
 
-    <!-- Поиск -->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchViewCalls"
         android:layout_width="match_parent"
@@ -28,7 +25,6 @@
 
     <Space android:layout_width="match_parent" android:layout_height="16dp" />
 
-    <!-- Список звонков -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCalls"
         android:layout_width="match_parent"

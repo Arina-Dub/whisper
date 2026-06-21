@@ -93,11 +93,9 @@ public class SettingsFragment extends Fragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String uid = user.getUid();
-            // Помечаем в Firestore как удаленный
             FirebaseFirestore.getInstance().collection("users").document(uid)
                     .update("isDeleted", true)
                     .addOnSuccessListener(aVoid -> {
-                        // После обновления Firestore удаляем из Auth (если возможно)
                         user.delete().addOnCompleteListener(task -> {
                             prefs.logout();
                             if (isAdded()) {
@@ -120,7 +118,6 @@ public class SettingsFragment extends Fragment {
         int mode = newDark ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
         AppCompatDelegate.setDefaultNightMode(mode);
         
-        // Пересоздаем активность вручную для мгновенного эффекта, если система медлит
         if (getActivity() != null) {
             getActivity().recreate();
         }
@@ -130,19 +127,15 @@ public class SettingsFragment extends Fragment {
         if (binding != null) {
             binding.textViewUserName.setText(prefs.getUserName());
             
-            // Источник истины для Email - Firebase Auth
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
                 binding.textViewUserEmail.setText(user.getEmail());
                 
-                // Обновляем состояние пользователя, чтобы проверить смену Email
                 user.reload().addOnCompleteListener(task -> {
                     if (binding != null && user.getEmail() != null) {
                         String currentEmail = user.getEmail();
                         binding.textViewUserEmail.setText(currentEmail);
                         
-                        // Если email в Auth изменился (после подтверждения ссылки), 
-                        // обновляем его в преференсах и в Firestore
                         if (!currentEmail.equals(prefs.getUserEmail())) {
                             prefs.setUserEmail(currentEmail);
                             FirebaseFirestore.getInstance().collection("users").document(user.getUid())
@@ -154,42 +147,34 @@ public class SettingsFragment extends Fragment {
                 binding.textViewUserEmail.setText(prefs.getUserEmail());
             }
 
-            // Состояние темы
             if (prefs.isDarkMode()) {
                 binding.buttonThemeToggle.setImageResource(R.drawable.night);
             } else {
                 binding.buttonThemeToggle.setImageResource(R.drawable.light);
             }
             
-            // Загрузка аватара из преференсов
             String avatarUri = prefs.getAvatarUri();
             loadAvatar(avatarUri);
 
-            // Дополнительно проверяем Firestore на наличие свежих данных
             String uid = FirebaseAuth.getInstance().getUid();
             if (uid != null) {
                 FirebaseFirestore.getInstance().collection("users").document(uid).get()
                         .addOnSuccessListener(documentSnapshot -> {
                             if (binding != null && documentSnapshot.exists()) {
-                                // Синхронизация аватара
                                 String firestoreAvatar = documentSnapshot.getString("avatarUrl");
                                 if (firestoreAvatar != null && !firestoreAvatar.equals(avatarUri)) {
                                     prefs.setAvatarUri(firestoreAvatar);
                                     loadAvatar(firestoreAvatar);
                                 }
                                 
-                                // Синхронизация имени
                                 String firestoreName = documentSnapshot.getString("name");
                                 if (firestoreName != null && !firestoreName.equals(prefs.getUserName())) {
                                     prefs.setUserName(firestoreName);
                                     binding.textViewUserName.setText(firestoreName);
                                 }
                                 
-                                // Firestore email может быть устаревшим, если Auth уже обновился.
-                                // Но если в Firestore email новее (например, изменен в консоли), обновим префы.
                                 String firestoreEmail = documentSnapshot.getString("email");
                                 if (firestoreEmail != null && user != null && !firestoreEmail.equals(user.getEmail())) {
-                                    // Приоритет всегда у Firebase Auth для email
                                     FirebaseFirestore.getInstance().collection("users").document(uid)
                                             .update("email", user.getEmail());
                                 }
@@ -291,11 +276,9 @@ public class SettingsFragment extends Fragment {
                                         prefs.setUserName(name);
                                         prefs.setAvatarUri(avatar);
                                     }
-                                    // Обновляем пароль в списке если он изменился
                                     prefs.saveAccount(email, password, name, avatar);
                                     
                                     Toast.makeText(requireContext(), "Успешно: " + email, Toast.LENGTH_SHORT).show();
-                                    // Пересоздаем активность для полной перезагрузки всех фрагментов и тем
                                     if (getActivity() != null) {
                                         getActivity().recreate();
                                     }
