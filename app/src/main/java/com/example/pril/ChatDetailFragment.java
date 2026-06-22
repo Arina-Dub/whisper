@@ -27,6 +27,7 @@ import com.example.pril.databinding.FragmentChatDetailBinding;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import java.io.File;
@@ -216,43 +217,36 @@ public class ChatDetailFragment extends Fragment {
                     binding.textViewStatus.setText("");
                     binding.buttonCall.setVisibility(View.GONE);
                     binding.layoutInput.setVisibility(View.GONE);
-                    ViewGroup inputParent = (ViewGroup) binding.layoutInput.getParent();
-                    boolean blockedMsgExists = false;
-                    for (int i = 0; i < inputParent.getChildCount(); i++) {
-                        View child = inputParent.getChildAt(i);
-                        if (child instanceof TextView && "Отправка сообщений невозможна".equals(((TextView)child).getText().toString())) {
-                            blockedMsgExists = true;
-                            break;
-                        }
-                    }
-                    if (!blockedMsgExists) {
-                        TextView blockedText = new TextView(getContext());
-                        blockedText.setText("Отправка сообщений невозможна");
-                        blockedText.setGravity(android.view.Gravity.CENTER);
-                        blockedText.setPadding(0, 24, 0, 24);
-                        blockedText.setTextColor(getResources().getColor(R.color.grey_3));
-                        inputParent.addView(blockedText);
-                    }
                     return;
                 }
+                
                 binding.layoutInput.setVisibility(View.VISIBLE);
                 binding.buttonCall.setVisibility(View.VISIBLE);
-                binding.buttonCall.setEnabled(true);
-                binding.buttonCall.setAlpha(1.0f);
+                
                 String name = doc.getString("name");
                 String avatarUrl = doc.getString("avatarUrl");
                 String status = doc.getString("status");
                 Timestamp lastSeen = doc.getTimestamp("lastSeen");
+                Boolean showOnline = doc.getBoolean("showOnlineStatus");
+                if (showOnline == null) showOnline = true;
+
                 binding.textViewTitle.setText(name != null ? name : "Чат");
                 if (avatarUrl != null && !avatarUrl.isEmpty()) {
                     Glide.with(this).load(avatarUrl).placeholder(R.drawable.profile).circleCrop().into(binding.imageViewAvatar);
                 }
-                if ("online".equals(status)) {
-                    binding.textViewStatus.setText("в сети");
-                    binding.textViewStatus.setTextColor(getResources().getColor(R.color.primary_pink));
-                } else if (lastSeen != null) {
-                    binding.textViewStatus.setText(formatLastSeen(lastSeen));
-                    binding.textViewStatus.setTextColor(0xFF999999);
+
+                if (!showOnline) {
+                    binding.textViewStatus.setText("");
+                } else {
+                    if ("online".equals(status)) {
+                        binding.textViewStatus.setText("в сети");
+                        binding.textViewStatus.setTextColor(getResources().getColor(R.color.primary_pink));
+                    } else if (lastSeen != null) {
+                        binding.textViewStatus.setText(formatLastSeen(lastSeen));
+                        binding.textViewStatus.setTextColor(0xFF999999);
+                    } else {
+                        binding.textViewStatus.setText("");
+                    }
                 }
             }
         });
@@ -355,6 +349,11 @@ public class ChatDetailFragment extends Fragment {
                 MessageModel msg = doc.toObject(MessageModel.class);
                 if (msg != null) {
                     msg.setMessageId(doc.getId());
+                    
+                    if (msg.getDeletedBy() != null && msg.getDeletedBy().contains(currentUserId)) {
+                        continue;
+                    }
+                    
                     newMessages.add(msg);
                     Boolean isRead = doc.getBoolean("read");
                     if (currentUserId.equals(msg.getReceiverId()) && (isRead == null || !isRead)) {
@@ -387,23 +386,32 @@ public class ChatDetailFragment extends Fragment {
                 .setTitle("Выберите действие")
                 .setItems(options, (dialog, which) -> {
                     if (options[which].equals("Удалить у меня")) {
-                        deleteMessage(message.getMessageId());
+                        deleteMessageForMe(message.getMessageId());
                     } else if (options[which].equals("Удалить у всех")) {
-                        deleteMessage(message.getMessageId());
+                        deleteMessageForEveryone(message.getMessageId());
                     }
                 })
                 .show();
     }
 
-    private void deleteMessage(String messageId) {
+    private void deleteMessageForMe(String messageId) {
+        if (chatId == null || messageId == null) return;
+        db.collection("chats").document(chatId).collection("messages").document(messageId)
+                .update("deletedBy", FieldValue.arrayUnion(currentUserId))
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), "Сообщение удалено для вас", Toast.LENGTH_SHORT).show();
+                    updateLastMessageAfterDeletion();
+                });
+    }
+
+    private void deleteMessageForEveryone(String messageId) {
         if (chatId == null || messageId == null) return;
         db.collection("chats").document(chatId).collection("messages").document(messageId)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(getContext(), "Сообщение удалено", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Сообщение удалено у всех", Toast.LENGTH_SHORT).show();
                     updateLastMessageAfterDeletion();
-                })
-                .addOnFailureListener(e -> Toast.makeText(getContext(), "Ошибка удаления", Toast.LENGTH_SHORT).show());
+                });
     }
 
     private void updateLastMessageAfterDeletion() {
@@ -438,6 +446,7 @@ public class ChatDetailFragment extends Fragment {
         message.put("type", type);
         message.put("read", false);
         message.put("timestamp", com.google.firebase.firestore.FieldValue.serverTimestamp());
+        message.put("deletedBy", new ArrayList<String>());
         if (imageUrl != null) message.put("imageUrl", imageUrl);
         db.collection("chats").document(chatId).collection("messages").add(message);
 

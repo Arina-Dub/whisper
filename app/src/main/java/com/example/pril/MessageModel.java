@@ -2,6 +2,7 @@ package com.example.pril;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.ServerTimestamp;
+import java.util.List;
 
 public class MessageModel {
     private String text;
@@ -11,6 +12,7 @@ public class MessageModel {
     private String type;
     private boolean read;
     private String messageId;
+    private List<String> deletedBy;
     @ServerTimestamp
     private Timestamp timestamp;
 
@@ -45,6 +47,9 @@ public class MessageModel {
 
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
+
+    public List<String> getDeletedBy() { return deletedBy; }
+    public void setDeletedBy(List<String> deletedBy) { this.deletedBy = deletedBy; }
 
     public Timestamp getTimestamp() { return timestamp; }
     public void setTimestamp(Timestamp timestamp) { this.timestamp = timestamp; }

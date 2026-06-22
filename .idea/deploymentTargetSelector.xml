@@ -18,6 +18,11 @@
                 <DeviceId pluginId="PhysicalDevice" identifier="serial=swlrxocavobemrug" />
               </handle>
             </Target>
+            <Target type="DEFAULT_BOOT">
+              <handle>
+                <DeviceId pluginId="PhysicalDevice" identifier="serial=6TEQGAAABYMZKBSW" />
+              </handle>
+            </Target>
           </targets>
         </DialogSelection>
       </SelectionState>

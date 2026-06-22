@@ -21,21 +21,6 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switchAutoDownload"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:text="Автозагрузка медиа"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/light_grey_3" />
-
             <Button
                 android:id="@+id/buttonClearCache"
                 style="@style/Widget.Material3.Button.TextButton"
